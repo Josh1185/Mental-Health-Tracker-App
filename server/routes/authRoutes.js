@@ -2,10 +2,20 @@
 import express from 'express';
 import { register, login } from '../controllers/authController.js';
 import { body, validationResult } from 'express-validator';
+import rateLimit from 'express-rate-limit';
 
 const router = express.Router();
 
 // Rate limiting goes here
+const authLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 mins
+  max: 5, // Limit each IP to 5 server requests per windowMs
+  message: {
+    error: 'Too many attempts. Please try again in 5 mins.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false
+});
 
 // Auth validation goes here
 const validateRegister = [
@@ -54,7 +64,7 @@ const validateLogin = [
 ];
 
 // Routes go here
-router.post('/register', validateRegister, register);
-router.post('/login', validateLogin, login);
+router.post('/register', authLimiter, validateRegister, register);
+router.post('/login', authLimiter, validateLogin, login);
 
 export default router;

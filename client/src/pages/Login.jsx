@@ -18,7 +18,7 @@ export default function Login() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Login Failed');
+      if (!res.ok) throw new Error(data.message || data.error || 'Login Failed');
 
       alert('Login successful');
     }
