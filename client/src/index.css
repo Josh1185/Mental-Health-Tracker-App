@@ -1,1 +1,66 @@
 @import "tailwindcss";
+
+:root {
+  --primary-color: #A2C5F4;
+  --accent-color: #C8BFE7;
+  --background-color: #F2F4F7;
+  --input-border-color: #b7b7b7;
+  --text-color: #333333;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
+@theme {
+  --animate-fade-in-scale: fade-in-scale 0.8s ease-out;
+
+  @keyframes fade-in-scale {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+@layer base {
+  h1, h2 {
+    font-weight: 600;
+    color: var(--text-color);
+  }
+
+  h3, h4 {
+    font-weight: 500;
+    color: var(--text-color);
+  }
+
+  h5, h6 {
+    font-weight: 400;
+    color: var(--text-color);
+  }
+
+  p, a, li, input, label {
+    font-weight: 300;
+    color: var(--text-color);
+  }
+
+  input {
+    outline: none;
+    border: none;
+  }
+
+  button {
+    font-weight: 400;
+    color: var(--text-color);
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  
+}
+
+* {
+  font-family: 'Inter', sans-serif;
+}

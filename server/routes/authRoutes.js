@@ -7,11 +7,26 @@ const router = express.Router();
 
 // Rate limiting goes here
 
-// Registration validation goes here
+// Auth validation goes here
 const validateRegister = [
-  body('username').notEmpty().withMessage('Username is required'),
-  body('email').isEmail().withMessage('Valid email required'),
-  body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
+  // Name validation
+  body('name')
+    .notEmpty().withMessage('Name is required')
+    .isLength({ min: 2 }).withMessage('Name must be at least 2 characters'),
+  
+  // Email validation
+  body('email')
+    .notEmpty().withMessage('Email is required')
+    .isEmail().withMessage('Invalid email address'),
+  
+  // Password validation
+  body('password')
+    .notEmpty().withMessage('Password is required')
+    .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+    .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
+    .withMessage('Password must contain at least one letter and one number'),
+
+  // Final validation result
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -20,8 +35,26 @@ const validateRegister = [
   }
 ];
 
+const validateLogin = [
+  // Email validation
+  body('email')
+    .notEmpty().withMessage('Email is required')
+    .isEmail().withMessage('Invalid email address'),
+  
+  // Password validation
+  body('password')
+    .notEmpty().withMessage('Password is required'),
+
+  // Final validation result
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+    next();
+  }
+];
+
 // Routes go here
 router.post('/register', validateRegister, register);
-router.post('/login', login);
+router.post('/login', validateLogin, login);
 
 export default router;

@@ -5,12 +5,12 @@ import jwt from 'jsonwebtoken';
 // Registration controller
 export const register = async (req, res) => {
   try {
-    const { username, email, password } = req.body; // Retrieve request body payload
+    const { name, email, password } = req.body; // Retrieve request body payload
 
     const existingUser = await User.findOne({ email }); // Check if there is already a user with that email
     if (existingUser) return res.status(400).json({ message: 'A user with that email already exists.' });
 
-    const newUser = new User({ username, email, password }); // Insert input credentials to the collection
+    const newUser = new User({ name, email, password }); // Insert input credentials to the collection
     await newUser.save(); // Await for the user to be saved
 
     res.status(201).json({ message: 'Registration successful.' });
