@@ -6,25 +6,30 @@ import FormInput from '../components/FormInput.jsx';
 export default function Register() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const [serverError, setServerError] = useState(''); // Initialize error state to none
+  const [successMessage, setSuccessMessage] = useState(''); // State for success message
   const navigate = useNavigate(); // Navigation hook
 
   const onSubmit = async (formData) => { // Handles form submission
     setServerError(''); // Clear prev server errors
+    setSuccessMessage(''); // Clear previous success messages
+    
 
-    const { confirmPassword, ...dataToSend } = formData;
-
+    const { confirmPassword, ...dataToSend } = formData; // Exclude confirmPassword from data to send
+    // Make post request to api server
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/register`, { // Make post request to api server
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dataToSend)
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Registration Failed');
+      if (!res.ok) throw new Error(data.message || data.error || 'Registration Failed');
 
-      alert('Registered Successfully');
-      navigate('/login'); // Redirect to login page
+      setSuccessMessage('Registration successful! Redirecting to login...'); // Set success message
+      setTimeout(() => {
+        navigate('/login'); // Redirect to login page after 3 seconds
+      }, 3000);
     }
     catch (err) {
       setServerError(err.message);
@@ -52,6 +57,7 @@ export default function Register() {
         Hello! Register to get started
       </h2>
       {serverError && <p className="text-red-500 text-sm sm:text-sm md:text-base lg:text-base xl:text-base 2xl:text-base">{serverError}</p>}
+      {successMessage && <p className="text-green-500 text-sm sm:text-sm md:text-base lg:text-base xl:text-base 2xl:text-base mt-[10px]">{successMessage}</p>}
 
       <div className="w-full flex flex-col items-center gap-[10px]">
         <FormInput
@@ -115,6 +121,7 @@ export default function Register() {
           transition-all duration-150
           hover:shadow-[1px_1px_3px_var(--shadow-color)]
         "
+        disabled={!!successMessage}
       >
         Register
       </button>
@@ -130,7 +137,8 @@ export default function Register() {
           text-sm sm:text-sm md:text-base lg:text-base xl:text-base 2xl:text-base
           transition-all duration-150
           hover:shadow-[1px_1px_3px_var(--shadow-color)]
-        "      
+        "
+        disabled={!!successMessage}
       >
         <img className="w-[20px] h-[20px]" src="../../google-icon.svg" alt="Google icon" />
         Register with Google

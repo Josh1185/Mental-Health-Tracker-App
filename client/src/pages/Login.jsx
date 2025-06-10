@@ -6,10 +6,13 @@ import FormInput from '../components/FormInput.jsx';
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [serverError, setServerError] = useState(''); // Initialize error state to none
+  const [successMessage, setSuccessMessage] = useState(''); // State for success message
   const navigate = useNavigate(); // Navigation hook
 
   const onSubmit = async (formData) => { // Handles form submission
     setServerError(''); // Clear prev server errors
+    setSuccessMessage(''); // Clear previous success messages
+    // Make post request to API server
     try {
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, { // Make post request to api server
         method: 'POST',
@@ -20,7 +23,12 @@ export default function Login() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || data.error || 'Login Failed');
 
-      alert('Login successful');
+      setSuccessMessage('Login successful! Redirecting...'); // Set success message
+      /* ADDED LATER
+      setTimeout(() => {
+        navigate('/dashboard'); // Redirect to dashboard after 3 seconds
+      }, 3000);
+      */
     }
     catch (err) {
       setServerError(err.message);
@@ -48,6 +56,7 @@ export default function Login() {
         Welcome back! Login to continue
       </h2>
       {serverError && <p className="text-red-500 text-sm sm:text-sm md:text-base lg:text-base xl:text-base 2xl:text-base">{serverError}</p>}
+      {successMessage && <p className="text-green-500 text-sm sm:text-sm md:text-base lg:text-base xl:text-base 2xl:text-base mt-[10px]">{successMessage}</p>}
 
       <div className="w-full flex flex-col items-center gap-[10px]">
         <FormInput
@@ -76,7 +85,7 @@ export default function Login() {
         />
       </div>
 
-      <a href="#"
+      <a href="/forgot-password"
         className="
           underline text-(--primary-color)
           text-xs sm:text-xs md:text-sm lg:text-sm xl:text-sm 2xl:text-sm
@@ -97,6 +106,7 @@ export default function Login() {
           transition-all duration-150
           hover:shadow-[1px_1px_3px_var(--shadow-color)]
         "
+        disabled={!!successMessage}
       >
         Login
       </button>
@@ -112,7 +122,8 @@ export default function Login() {
           text-sm sm:text-sm md:text-base lg:text-base xl:text-base 2xl:text-base
           transition-all duration-150
           hover:shadow-[1px_1px_3px_var(--shadow-color)]
-        "      
+        "
+        disabled={!!successMessage}
       >
         <img className="w-[20px] h-[20px]" src="../../google-icon.svg" alt="Google icon" />
         Login with Google

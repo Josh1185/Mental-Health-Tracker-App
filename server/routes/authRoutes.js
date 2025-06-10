@@ -1,6 +1,6 @@
 // This file contains the authentication routes
 import express from 'express';
-import { register, login } from '../controllers/authController.js';
+import { register, login, requestPasswordReset, resetPassword } from '../controllers/authController.js';
 import { body, validationResult } from 'express-validator';
 import rateLimit from 'express-rate-limit';
 
@@ -63,8 +63,45 @@ const validateLogin = [
   }
 ];
 
+// Email validation for password reset requests
+const validatePasswordResetRequest = [
+  body('email')
+    .notEmpty().withMessage('Email is required')
+    .isEmail().withMessage('Invalid email address'),
+
+  // Final validation result
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+    next();
+  }
+];
+
+// Password reset validation
+const validateResetPassword = [
+  body('token')
+    .notEmpty().withMessage('Reset token is required'),
+  
+  body('newPassword')
+    .notEmpty().withMessage('New password is required')
+    .isLength({ min: 8 }).withMessage('New password must be at least 8 characters')
+    .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
+    .withMessage('New password must contain at least one letter and one number'),
+
+  // Final validation result
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+    next();
+  }
+];
+
 // Routes go here
+// Register and login routes
 router.post('/register', authLimiter, validateRegister, register);
 router.post('/login', authLimiter, validateLogin, login);
+// Password reset routes
+router.post('/request-password-reset', authLimiter, validatePasswordResetRequest, requestPasswordReset);
+router.post('/reset-password', authLimiter, validateResetPassword, resetPassword);
 
 export default router;

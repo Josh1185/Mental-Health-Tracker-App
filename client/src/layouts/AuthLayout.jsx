@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-export default function LoginRegisterLayout() {
+export default function AuthLayout() {
   return (
     <div 
       className="

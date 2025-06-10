@@ -2,12 +2,20 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcryptjs';
 
-// Collection Schema
+// User Collection Schema
 const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email:    { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-}, { versionKey: false });
+  
+  // Password reset fields
+  resetToken: String,
+  resetTokenExpires: Date,
+}, 
+{ 
+  versionKey: false, 
+  timestamps: true, // Adds createdAt and updatedAt
+});
 
 // Hash Password for entries before saving
 UserSchema.pre('save', async function (next) {
