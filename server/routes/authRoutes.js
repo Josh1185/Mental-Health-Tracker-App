@@ -33,8 +33,8 @@ const validateRegister = [
   body('password')
     .notEmpty().withMessage('Password is required')
     .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
-    .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
-    .withMessage('Password must contain at least one letter and one number'),
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/)
+    .withMessage('Password must contain at least one number, one lowercase, and one uppercase'),
 
   // Final validation result
   (req, res, next) => {
@@ -85,8 +85,8 @@ const validateResetPassword = [
   body('newPassword')
     .notEmpty().withMessage('New password is required')
     .isLength({ min: 8 }).withMessage('New password must be at least 8 characters')
-    .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
-    .withMessage('New password must contain at least one letter and one number'),
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/)
+    .withMessage('New password must contain at least one number, one lowercase, and one uppercase'),
 
   // Final validation result
   (req, res, next) => {

@@ -80,7 +80,7 @@ export default function ResetPassword() {
           rules={{
             required: 'New password is required',
             minLength: { value: 8, message: 'New password must be at least 8 characters' },
-            pattern: { value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, message: 'New password must contain at least one number and letter' }
+            pattern: { value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, message: 'New password must contain at least one number, one lowercase, and one uppercase' }
           }}
           required
         />
