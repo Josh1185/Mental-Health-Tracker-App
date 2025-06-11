@@ -8,11 +8,15 @@ export default function ForgotPassword() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [serverError, setServerError] = useState(''); // Initialize error state to none
   const [successMessage, setSuccessMessage] = useState(''); // State for success message
+  const [isSubmitting, setIsSubmitting] = useState(false); // State to track form submission
   const navigate = useNavigate(); // Navigation hook
 
   const onSubmit = async (formData) => { // Handles form submission
     setServerError(''); // Clear previous server errors
     setSuccessMessage(''); // Clear previous success messages
+    setIsSubmitting(true); // Set submitting state to true
+    if (isSubmitting) return; // Prevent multiple submissions
+
     try {
       // Make post request to API server
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/request-password-reset`, {
@@ -31,6 +35,9 @@ export default function ForgotPassword() {
     }
     catch (err) {
       setServerError(err.message); // Set server error message
+    }
+    finally {
+      setIsSubmitting(false); // Reset submitting state
     }
   }
 
@@ -83,9 +90,9 @@ export default function ForgotPassword() {
           transition-all duration-150
           hover:shadow-[1px_1px_3px_var(--shadow-color)]
         "
-        disabled={!!successMessage}
+        disabled={!!successMessage || isSubmitting} // Disable button if success message is shown or form is submitting
       >
-        Send Reset Link
+        {isSubmitting ? 'Sending...' : 'Send Reset Link'}
       </button>   
 
       <p

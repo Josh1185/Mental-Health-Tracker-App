@@ -21,10 +21,13 @@ export default function ResetPassword() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const [serverError, setServerError] = useState(''); // Initialize error state to none
   const [successMessage, setSuccessMessage] = useState(''); // State for success message
-
+  const [isSubmitting, setIsSubmitting] = useState(false); // State to track form submission
+  
   const onSubmit = async (formData) => { // Handles form submission
     setServerError(''); // Clear previous server errors
     setSuccessMessage(''); // Clear previous success messages
+    setIsSubmitting(true); // Set submitting state to true
+    if (isSubmitting) return; // Prevent multiple submissions
 
     const { confirmNewPassword, newPassword } = formData; // Exclude confirmPassword from data to send
 
@@ -46,6 +49,9 @@ export default function ResetPassword() {
     }
     catch (err) {
       setServerError(err.message); // Set server error message
+    }
+    finally {
+      setIsSubmitting(false); // Reset submitting state
     }
   }
 
@@ -113,9 +119,9 @@ export default function ResetPassword() {
           transition-all duration-150
           hover:shadow-[1px_1px_3px_var(--shadow-color)]
         "
-        disabled={!!successMessage}
+        disabled={!!successMessage || isSubmitting} // Disable button if success message is shown or form is submitting
       >
-        Reset Password
+        {isSubmitting ? 'Resetting...' : 'Reset Password'}
       </button>   
     </form>
   );

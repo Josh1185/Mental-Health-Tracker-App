@@ -7,12 +7,14 @@ export default function Register() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const [serverError, setServerError] = useState(''); // Initialize error state to none
   const [successMessage, setSuccessMessage] = useState(''); // State for success message
+  const [isSubmitting, setIsSubmitting] = useState(false); // State to track form submission
   const navigate = useNavigate(); // Navigation hook
 
   const onSubmit = async (formData) => { // Handles form submission
     setServerError(''); // Clear prev server errors
     setSuccessMessage(''); // Clear previous success messages
-    
+    setIsSubmitting(true); // Set submitting state to true
+    if (isSubmitting) return; // Prevent multiple submissions
 
     const { confirmPassword, ...dataToSend } = formData; // Exclude confirmPassword from data to send
     // Make post request to api server
@@ -33,6 +35,9 @@ export default function Register() {
     }
     catch (err) {
       setServerError(err.message);
+    }
+    finally {
+      setIsSubmitting(false); // Reset submitting state
     }
   };
 
@@ -121,9 +126,9 @@ export default function Register() {
           transition-all duration-150
           hover:shadow-[1px_1px_3px_var(--shadow-color)]
         "
-        disabled={!!successMessage}
+        disabled={!!successMessage || isSubmitting}
       >
-        Register
+        {isSubmitting ? 'Registering...': 'Register'}
       </button>
 
       <p className="text-xs sm:text-xs md:text-sm lg:text-sm xl:text-sm 2xl:text-sm my-[5px]">or</p>
@@ -138,7 +143,7 @@ export default function Register() {
           transition-all duration-150
           hover:shadow-[1px_1px_3px_var(--shadow-color)]
         "
-        disabled={!!successMessage}
+        disabled={!!successMessage || isSubmitting}
       >
         <img className="w-[20px] h-[20px]" src="../../google-icon.svg" alt="Google icon" />
         Register with Google

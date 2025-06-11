@@ -7,11 +7,15 @@ export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [serverError, setServerError] = useState(''); // Initialize error state to none
   const [successMessage, setSuccessMessage] = useState(''); // State for success message
+  const [isSubmitting, setIsSubmitting] = useState(false); // State to track form submission
   const navigate = useNavigate(); // Navigation hook
 
   const onSubmit = async (formData) => { // Handles form submission
     setServerError(''); // Clear prev server errors
     setSuccessMessage(''); // Clear previous success messages
+    setIsSubmitting(true); // Set submitting state to true
+    if (isSubmitting) return; // Prevent multiple submissions
+
     // Make post request to API server
     try {
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, { // Make post request to api server
@@ -32,6 +36,9 @@ export default function Login() {
     }
     catch (err) {
       setServerError(err.message);
+    }
+    finally {
+      setIsSubmitting(false); // Reset submitting state
     }
   };
 
@@ -106,9 +113,9 @@ export default function Login() {
           transition-all duration-150
           hover:shadow-[1px_1px_3px_var(--shadow-color)]
         "
-        disabled={!!successMessage}
+        disabled={!!successMessage || isSubmitting} // Disable button if success message or submitting
       >
-        Login
+        {isSubmitting ? 'Logging in...': 'Login'}
       </button>
 
       <p className="text-xs sm:text-xs md:text-sm lg:text-sm xl:text-sm 2xl:text-sm my-[5px]">or</p>
@@ -123,7 +130,7 @@ export default function Login() {
           transition-all duration-150
           hover:shadow-[1px_1px_3px_var(--shadow-color)]
         "
-        disabled={!!successMessage}
+        disabled={!!successMessage || isSubmitting} // Disable button if success message or submitting
       >
         <img className="w-[20px] h-[20px]" src="../../google-icon.svg" alt="Google icon" />
         Login with Google
