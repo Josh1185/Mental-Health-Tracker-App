@@ -5,6 +5,7 @@ import Landing from './pages/Landing.jsx';
 import AuthLayout from './layouts/AuthLayout.jsx';
 import ForgotPassword from './pages/ForgotPassword.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
+import GoogleSuccess from './pages/GoogleSuccess.jsx';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/google-success" element={<GoogleSuccess />} />
         </Route>
         
       </Routes>

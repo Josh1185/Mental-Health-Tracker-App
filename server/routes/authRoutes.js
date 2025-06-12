@@ -3,6 +3,9 @@ import express from 'express';
 import { register, login, requestPasswordReset, resetPassword } from '../controllers/authController.js';
 import { body, validationResult } from 'express-validator';
 import rateLimit from 'express-rate-limit';
+import passport from 'passport';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 const router = express.Router();
 
@@ -103,5 +106,12 @@ router.post('/login', authLimiter, validateLogin, login);
 // Password reset routes
 router.post('/request-password-reset', authLimiter, validatePasswordResetRequest, requestPasswordReset);
 router.post('/reset-password', authLimiter, validateResetPassword, resetPassword);
+// Google OAuth routes
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
+  // Handle successful authentication
+  const token = jwt.sign({ id: req.user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  res.redirect(`${process.env.FRONTEND_URL}/google-success?token=${token}`);
+});
 
 export default router;

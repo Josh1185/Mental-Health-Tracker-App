@@ -8,4 +8,8 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    host: true, // Allow access from other devices on the network
+    port: 5173, // Default Vite port
+  }
 })

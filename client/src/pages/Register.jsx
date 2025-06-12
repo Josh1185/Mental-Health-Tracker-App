@@ -144,6 +144,8 @@ export default function Register() {
           hover:shadow-[1px_1px_3px_var(--shadow-color)]
         "
         disabled={!!successMessage || isSubmitting}
+        onClick={() => window.open(`${import.meta.env.VITE_API_BASE_URL}/auth/google`, '_self')}
+        type="button"
       >
         <img className="w-[20px] h-[20px]" src="../../google-icon.svg" alt="Google icon" />
         Register with Google
