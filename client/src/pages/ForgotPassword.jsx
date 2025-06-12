@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 import FormInput from '../components/FormInput.jsx';
+import BaseForm from '../components/BaseForm.jsx';
 
 export default function ForgotPassword() {
 
@@ -43,24 +44,8 @@ export default function ForgotPassword() {
 
   // JSX
   return (
-    <form 
-      onSubmit={handleSubmit(onSubmit)} 
-      className="
-        w-[85%] max-w-[400px] p-[20px_30px] rounded-[5px]
-        bg-(--background-color)
-        flex flex-col items-center
-        animate-(--animate-fade-in-scale)
-      "
-    >
-      <h2 
-        className="
-          text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl 2xl:text-xl
-          text-center
-          mb-[20px]
-        "
-      >
-        Enter your email to reset your password
-      </h2>
+    <BaseForm onSubmit={handleSubmit(onSubmit)} title="Enter your email to reset your password">
+
       {serverError && <p className="text-red-500 text-sm sm:text-sm md:text-base lg:text-base xl:text-base 2xl:text-base">{serverError}</p>}
 
       <div className="w-full flex flex-col items-center gap-[10px]">
@@ -104,6 +89,7 @@ export default function ForgotPassword() {
         Remembered your password?
         <a href="/login" className="ml-[5px] underline text-(--primary-color)">Login</a>
       </p>
-    </form>
+
+    </BaseForm>
   );
 }

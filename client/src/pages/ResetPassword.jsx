@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useForm } from 'react-hook-form';
 import { useEffect } from "react";
 import FormInput from '../components/FormInput.jsx';
+import BaseForm from "../components/BaseForm.jsx";
 
 export default function ResetPassword() {
 
@@ -56,24 +57,9 @@ export default function ResetPassword() {
   }
 
   return (
-    <form 
-      onSubmit={handleSubmit(onSubmit)} 
-      className="
-        w-[85%] max-w-[400px] p-[20px_30px] rounded-[5px]
-        bg-(--background-color)
-        flex flex-col items-center
-        animate-(--animate-fade-in-scale)
-      "
-    >
-      <h2 
-        className="
-          text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl 2xl:text-xl
-          text-center
-          mb-[20px]
-        "
-      >
-        Enter your new password
-      </h2>
+
+    <BaseForm onSubmit={handleSubmit(onSubmit)} title="Enter your new password">
+
       {serverError && <p className="text-red-500 text-sm sm:text-sm md:text-base lg:text-base xl:text-base 2xl:text-base">{serverError}</p>}
 
       <div className="w-full flex flex-col items-center gap-[10px]">
@@ -123,6 +109,7 @@ export default function ResetPassword() {
       >
         {isSubmitting ? 'Resetting...' : 'Reset Password'}
       </button>   
-    </form>
+    </BaseForm>
+
   );
 }

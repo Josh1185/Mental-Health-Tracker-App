@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import FormInput from '../components/FormInput.jsx';
+import BaseForm from '../components/BaseForm.jsx';
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -44,24 +45,9 @@ export default function Login() {
 
   // JSX
   return (
-    <form 
-      onSubmit={handleSubmit(onSubmit)} 
-      className="
-        w-[85%] max-w-[400px] p-[20px_30px] rounded-[5px]
-        bg-(--background-color)
-        flex flex-col items-center
-        animate-(--animate-fade-in-scale)
-      "
-    >
-      <h2 
-        className="
-          text-md sm:text-lg md:text-xl lg:text-xl xl:text-xl 2xl:text-xl
-          text-center
-          mb-[20px]
-        "
-      >
-        Welcome back! Login to continue
-      </h2>
+
+    <BaseForm onSubmit={handleSubmit(onSubmit)} title="Welcome back! Login to continue">
+
       {serverError && <p className="text-red-500 text-sm sm:text-sm md:text-base lg:text-base xl:text-base 2xl:text-base">{serverError}</p>}
       {successMessage && <p className="text-green-500 text-sm sm:text-sm md:text-base lg:text-base xl:text-base 2xl:text-base mt-[10px]">{successMessage}</p>}
 
@@ -147,6 +133,8 @@ export default function Login() {
         New with us?
         <a href="/register" className="ml-[5px] underline text-(--primary-color)">Register</a>
       </p>
-    </form>
+
+    </BaseForm>
+
   );
 }
