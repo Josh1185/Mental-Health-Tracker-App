@@ -4,7 +4,13 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import passport from 'passport';
+
+// Database connection
+import { initDb } from './config/db.js';
+
+// Strategy imports
 import './passport/googleStrategy.js'; // Import Google OAuth strategy
+
 // config dotenv
 dotenv.config();
 
@@ -28,10 +34,10 @@ app.get('/', (req, res) => {
   res.send('API is running');
 });
 
-// Connect to DB and start server
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("Connected to MongoDB");
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  })
-  .catch(err => console.error("MongoDB connection error:", err));
+// Connect to DB
+initDb().catch(err => console.error('Database initialization failed:', err)).then(() => {
+
+  // Start the server only after successful DB connection
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+});
+
