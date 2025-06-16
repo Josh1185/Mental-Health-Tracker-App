@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "dotenv -e .env.development -- cross-env NODE_ENV=development node --watch server",
-    "test": "dotenv -e .env.test -- cross-env NODE_ENV=test jest",
+    "test": "dotenv -e .env.test -- cross-env NODE_ENV=test vitest",
     "start": "node server"
   },
   "keywords": [],
@@ -27,10 +27,9 @@
     "passport-google-oauth20": "^2.0.0"
   },
   "devDependencies": {
-    "@jest/globals": "^30.0.0",
     "cross-env": "^7.0.3",
     "dotenv-cli": "^8.0.0",
-    "jest": "^30.0.0",
-    "supertest": "^7.1.1"
+    "supertest": "^7.1.1",
+    "vitest": "^3.2.3"
   }
 }

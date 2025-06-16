@@ -2,7 +2,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import mongoose from 'mongoose';
 import passport from 'passport';
 
 // Database connection
@@ -34,10 +33,15 @@ app.get('/', (req, res) => {
   res.send('API is running');
 });
 
-// Connect to DB
-initDb().catch(err => console.error('Database initialization failed:', err)).then(() => {
+// export the express app
+export default app;
 
-  // Start the server only after successful DB connection
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-});
+// Connect to DB (If not testing)
+if (process.env.NODE_ENV !== 'test') {
+  initDb().catch(err => console.error('Database initialization failed:', err)).then(() => {
+    // Start the server only after successful DB connection
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  });
+}
+
 

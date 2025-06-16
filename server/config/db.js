@@ -27,8 +27,8 @@ export async function initDb() {
 
   try {
     // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
-    await mongoose.connect(uri, clientOptions);
-    await mongoose.connection.db.admin().command({ ping: 1 });
+    const conn = await mongoose.connect(uri, clientOptions);
+    await conn.connection.db.admin().command({ ping: 1 });
     console.log(`Successfully connected to MongoDB database. [Env: ${env}]`);
   }
   catch (err) {
