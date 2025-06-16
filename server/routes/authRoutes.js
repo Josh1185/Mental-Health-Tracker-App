@@ -114,4 +114,12 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
   res.redirect(`${process.env.FRONTEND_URL}/google-success?token=${token}`);
 });
 
+// Routes without rate limiting (for testing purposes)
+if (process.env.NODE_ENV === 'test') {
+  router.post('/test/register', validateRegister, register);
+  router.post('/test/login', validateLogin, login);
+  router.post('/test/request-password-reset', validatePasswordResetRequest, requestPasswordReset);
+  router.post('/test/reset-password', validateResetPassword, resetPassword);
+}
+
 export default router;

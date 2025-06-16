@@ -10,7 +10,7 @@ export const register = async (req, res) => {
     const { name, email, password } = req.body; // Retrieve request body payload
 
     const existingUser = await User.findOne({ email }); // Check if there is already a user with that email
-    if (existingUser) return res.status(400).json({ message: 'A user with that email already exists.' });
+    if (existingUser) return res.status(409).json({ message: 'A user with that email already exists.' });
 
     const newUser = new User({ name, email, password }); // Insert input credentials to the collection
     await newUser.save(); // Await for the user to be saved
@@ -40,11 +40,12 @@ export const login = async (req, res) => {
       { expiresIn: '7d' }
     );
 
-    res.json({ // Send token and user data upon successful login
+    res.status(202).json({ // Send token and user data upon successful login
+      message: 'Login successful.',
       token, 
       user: { 
         id: user._id, 
-        username: user.username, 
+        name: user.name, 
         email: user.email 
       } 
     });
