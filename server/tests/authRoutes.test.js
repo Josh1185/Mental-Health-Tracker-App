@@ -1,14 +1,10 @@
 import request from "supertest";
-import app from '../server.js';
+import app from '../app.js';
 import User from "../models/User.js";
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 
 // Register Route Test Suite
 describe('Auth Route: Register [/api/auth/test/register]', () => {
-  // Delete all users before each test
-  beforeEach(async () => {
-    await User.deleteMany({}); 
-  });
 
   // Test proper registration
   it('should register a new user w/ valid credentials', async () => {
@@ -33,7 +29,7 @@ describe('Auth Route: Register [/api/auth/test/register]', () => {
     // Create a duplicate user
     await User.create({
       name: 'duplicate',
-      email: 'duplicate@example.com',
+      email: 'testuser@example.com',
       password: 'Test1234'
     });
 
@@ -42,7 +38,7 @@ describe('Auth Route: Register [/api/auth/test/register]', () => {
       .post('/api/auth/test/register')
       .send({
         name: 'test',
-        email: 'duplicate@example.com',
+        email: 'testuser@example.com',
         password: 'Test1234'
       });
 
@@ -72,13 +68,17 @@ describe('Auth Route: Register [/api/auth/test/register]', () => {
       ])
     );
   });
+
+  // After each, delete testuser
+  afterEach(async () => {
+    await User.deleteOne({ email: 'testuser@example.com' });
+  });
 });
 
 // Login Route Test Suite
 describe('Auth Route: Login [/api/auth/test/login]', () => {
   // Delete all users, and insert a dummy user before each test
   beforeEach(async () => {
-    await User.deleteMany({});
     await User.create({
       name: 'dummyuser',
       email: 'dummyuser@example.com',
@@ -145,5 +145,10 @@ describe('Auth Route: Login [/api/auth/test/login]', () => {
         expect.objectContaining({ path: 'password', msg: 'Password is required' }),
       ])
     );
+  });
+
+  // After each delete the user
+  afterEach(async () => {
+    await User.deleteOne({ email: 'dummyuser@example.com' });
   });
 });

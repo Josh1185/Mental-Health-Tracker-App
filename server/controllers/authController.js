@@ -3,6 +3,7 @@ import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 
 // Registration controller
 export const register = async (req, res) => {
@@ -139,6 +140,7 @@ export const resetPassword = async (req, res) => {
     user.password = newPassword; // Set new password (it will be hashed automatically by the pre-save hook)
     user.resetToken = undefined; // Clear reset token
     user.resetTokenExpires = undefined; // Clear reset token expiration
+
     await user.save(); // Save the updated user
 
     res.status(200).json({ message: 'Password has been reset successfully.' });

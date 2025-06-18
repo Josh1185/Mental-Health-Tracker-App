@@ -13,6 +13,7 @@ const clientOptions = {
 }
 
 export async function initDb() {
+  if (mongoose.connection.readyState >= 1) return; // Already connected
 
   const env = process.env.NODE_ENV || 'development';
 
